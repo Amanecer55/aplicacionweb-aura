@@ -76,13 +76,13 @@ public function storeReserva(Request $request)
         
         'fecha' => 'required|date',
         'hora' => 'required|date_format:H:i',
-        'mensaje' => 'nullable|string|max:500', 
+        'mensajeadd' => 'nullable|string|max:500', 
     ]);
 
     // 2. CONSTRUCCIÓN Y MAPEO de datos a las COLUMNAS EXACTAS de la tabla 'citas'
     $reservaData = [
         // Mapeo de Nombres (Columna: nombre)
-        'nombre'       => $validated['nombres'], 
+        'nombre'       => $validated['nombre'], 
         // Mapeo de Apellidos (Columnas: apaterno, amaterno)
         'apaterno'     => $validated['apellido_paterno'], 
         'amaterno'     => $validated['apellido_materno'], 
@@ -99,7 +99,7 @@ public function storeReserva(Request $request)
         'horadeseada'  => $validated['hora'],  
         
         // Mapeo del Mensaje
-        'mensaje'      => $validated['mensaje'] ?? null,
+        'mensajeadd'      => $validated['mensajeadd'] ?? null,
     ];
 
     // 3. Crear y guardar la reserva

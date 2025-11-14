@@ -24,7 +24,7 @@ class Reserva extends Model
         'telefono', 
         'fechadeseada', // Coincide con la columna de tu DB
         'horadeseada',  // Coincide con la columna de tu DB
-        'mensaje',      // Coincide con la columna de tu DB
+        'mensajedd',      // Coincide con la columna de tu DB
         'servicios',    // ¡NUEVA COLUMNA, ahora lista para ser guardada!
     ];
 }
