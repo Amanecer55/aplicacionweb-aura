@@ -9,27 +9,25 @@ class Reserva extends Model
 {
     use HasFactory;
     
-    // 1. CRÍTICO: Especifica el nombre real de la tabla en la base de datos.
+    // CRÍTICO 1: Nombre de la tabla en la DB
     protected $table = 'citas'; 
 
-    // 2. CRÍTICO: Deshabilita la gestión automática de las columnas created_at/updated_at,
-    // ya que no existen en la tabla 'citas'.
+    // CRÍTICO 2: Deshabilita los timestamps
     public $timestamps = false;
     
-    // 3. CRÍTICO: Permite la asignación masiva de estos 9 campos.
-    // Los nombres aquí DEBEN coincidir con los nombres de las COLUMNAS de tu tabla 'citas'.
+    // CRÍTICO 3: Lista de TODOS los campos que se van a guardar
+    // (Deben coincidir EXATAMENTE con las columnas de la tabla 'citas')
     protected $fillable = [
-        'nombre',       // Columna 1
-        'apaterno',     // Columna 2
-        'amaterno',     // Columna 3
-        'correo',       // Columna 4
-        'telefono',     // Columna 5
-        'servicios',    // Columna 6
-        'fechadeseada', // Columna 7
-        'horadeseada',  // Columna 8
-        'mensajeadd',   // Columna 9 (El nombre de tu DB)
+        'nombre',       
+        'apaterno',
+        'amaterno',
+        'correo', 
+        'telefono', 
+        'servicios',    
+        'fechadeseada', 
+        'horadeseada', 
+        'mensajeadd',   // CRÍTICO: El nombre de tu columna
     ];
     
-    // Opcional: Especifica el nombre de la llave primaria si no es 'id'
     protected $primaryKey = 'idcliente';
 }

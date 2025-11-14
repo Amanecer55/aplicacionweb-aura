@@ -218,7 +218,7 @@
     {{-- CAMPOS DE NOMBRE Y APELLIDOS --}}
     <div class="form-grupo">
         <label for="nombres">Nombre(s):</label>
-        <input type="text" id="nombres" name="nombres" value="{{ old('nombres') }}" required>
+        <input type="text" id="nombres" name="nombre" value="{{ old('nombres') }}" required>
         @error('nombres') <div class="error-message">{{ $message }}</div> @enderror
     </div>
 
@@ -290,8 +290,8 @@
     {{-- MENSAJE ADICIONAL --}}
     <div class="form-grupo">
         <label for="mensaje">Mensaje Adicional:</label>
-        <textarea id="mensaje" name="mensaje" rows="4">{{ old('mensaje') }}</textarea>
-        @error('mensaje') <div class="error-message">{{ $message }}</div> @enderror
+        <textarea id="mensaje" name="mensajeadd" rows="4">{{ old('mensajeadd') }}</textarea>
+        @error('mensajeadd') <div class="error-message">{{ $message }}</div> @enderror
     </div>
     
     <button type="submit" class="btn-submit">Enviar Solicitud</button>
