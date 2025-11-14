@@ -47,20 +47,17 @@ class PageController extends Controller
     
     // app/Http/Controllers/PageController.php
 
-// ... (Resto del código)
-
 public function reservaciones()
 {
-    // Carga todos los servicios, asegurando que la relación 'categoria' también se traiga (Eager Loading)
-    $servicios = Servicio::with('categoria')->get(); 
-    
-    // Opcional: Agrupa directamente aquí para simplificar la vista
+    // 1. Cargar la relación 'categoria' (Eager Loading)
+    $servicios = Servicio::with('categoria')->get();
+
+    // 2. Agrupar la colección de servicios por el nombre de la categoría
     $serviciosAgrupados = $servicios->groupBy('categoria.nombre_categoria'); 
-    
-    // Pasa los servicios ya agrupados a la vista
+
+    // 3. Pasar la colección YA AGRUPADA a la vista con el nombre correcto
     return view('pages.reservaciones', ['serviciosAgrupados' => $serviciosAgrupados]);
 }
-
 // app/Http/Controllers/PageController.php
 
 public function storeReserva(Request $request)
