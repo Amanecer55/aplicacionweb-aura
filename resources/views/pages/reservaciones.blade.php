@@ -259,52 +259,47 @@
         </select>
     </div>
     
-    {{-- BLOQUE DINÁMICO DE CHECKBOXES --}}
-    <div class="form-grupo" id="servicios-container" style="display: {{ old('cantidad_servicios') ? 'block' : 'none' }};">
-        <label>Servicios de Interés:</label>
-        <p style="font-size: 0.9em; color: #666; margin-top: 0.5rem;">Selecciona hasta <span id="max-servicios">{{ old('cantidad_servicios', 0) }}</span> servicio(s)</p>
-        
-        @if (isset($servicios) && count($servicios) > 0)
-            {{-- Agrupa los servicios por el nombre de la categoría para replicar la estructura --}}
-            @php
-                // Se asume que $servicios tiene la relación 'categoria' cargada (eager loading)
-                $serviciosAgrupados = $servicios->groupBy('categoria.nombre_categoria'); 
-            @endphp
-            
-            @foreach ($serviciosAgrupados as $nombreCategoria => $serviciosLista)
-                <div style="margin-top: 1rem;">
-                    <strong style="display: block; margin-bottom: 0.5rem;">{{ $nombreCategoria }}</strong>
-                    <div style="margin-left: 1rem;">
-                        @foreach ($serviciosLista as $servicio)
-                            <label style="display: block; margin-bottom: 0.5rem;">
-                                {{-- Campo checkbox dinámico --}}
-                                <input type="checkbox" 
-                                       name="servicios[]" 
-                                       value="{{ $servicio->nombre_servicio }}" 
-                                       class="servicio-checkbox"
-                                       {{ is_array(old('servicios')) && in_array($servicio->nombre_servicio, old('servicios')) ? 'checked' : '' }}>
-                                {{ $servicio->nombre_servicio }}
-                            </label>
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
-            
-            {{-- Opción "Otro" --}}
+   {{-- BLOQUE DINÁMICO DE CHECKBOXES --}}
+<div class="form-grupo" id="servicios-container" style="display: {{ old('cantidad_servicios') ? 'block' : 'none' }};">
+    <label>Servicios de Interés:</label>
+    <p style="font-size: 0.9em; color: #666; margin-top: 0.5rem;">Selecciona hasta <span id="max-servicios">{{ old('cantidad_servicios', 0) }}</span> servicio(s)</p>
+    
+    {{-- AHORA USAMOS LA VARIABLE YA AGRUPADA DEL CONTROLADOR --}}
+    @if (isset($serviciosAgrupados) && count($serviciosAgrupados) > 0)
+        @foreach ($serviciosAgrupados as $nombreCategoria => $serviciosLista)
             <div style="margin-top: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem;">
-                    <input type="checkbox" name="servicios[]" value="Otro" class="servicio-checkbox" {{ is_array(old('servicios')) && in_array('Otro', old('servicios')) ? 'checked' : '' }}>
-                    Otro (Especificar en mensaje adicional)
-                </label>
+                <strong style="display: block; margin-bottom: 0.5rem;">{{ $nombreCategoria }}</strong>
+                <div style="margin-left: 1rem;">
+                    @foreach ($serviciosLista as $servicio)
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            {{-- Campo checkbox dinámico --}}
+                            <input type="checkbox" 
+                                   name="servicios[]" 
+                                   value="{{ $servicio->nombre_servicio }}" 
+                                   class="servicio-checkbox"
+                                   {{ is_array(old('servicios')) && in_array($servicio->nombre_servicio, old('servicios')) ? 'checked' : '' }}>
+                            {{ $servicio->nombre_servicio }}
+                        </label>
+                    @endforeach
+                </div>
             </div>
-            
-            {{-- Muestra error de validación para el campo 'servicios' (el array) --}}
-            @error('servicios') <div class="error-message">{{ $message }}</div> @enderror
-            
-        @else
-            <p>No hay servicios disponibles para reservar. Por favor, inténtalo más tarde.</p>
-        @endif
-    </div>
+        @endforeach
+        
+        {{-- Opción "Otro" --}}
+        <div style="margin-top: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox" name="servicios[]" value="Otro" class="servicio-checkbox" {{ is_array(old('servicios')) && in_array('Otro', old('servicios')) ? 'checked' : '' }}>
+                Otro (Especificar en mensaje adicional)
+            </label>
+        </div>
+        
+        {{-- Muestra error de validación para el campo 'servicios' (el array) --}}
+        @error('servicios') <div class="error-message">{{ $message }}</div> @enderror
+        
+    @else
+        <p>No hay servicios disponibles para reservar. Por favor, inténtalo más tarde.</p>
+    @endif
+</div>
     
     {{-- FECHA Y HORA --}}
     <div class="form-grupo">

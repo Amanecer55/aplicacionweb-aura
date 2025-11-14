@@ -45,26 +45,21 @@ class PageController extends Controller
         return view('pages.contacto');
     }
     
-    /**
-     * Muestra la página del formulario de reservaciones.
-     * * Sugerencia: Aquí deberías cargar los servicios/categorías para el <select> del formulario.
-     */
-    public function reservaciones()
-    {
-        // Ejemplo: Cargar todos los servicios para el formulario
-        $servicios = Servicio::all(); 
-        
-        return view('pages.reservaciones', ['servicios' => $servicios]);
-    }
+    // app/Http/Controllers/PageController.php
 
-    /**
-     * Procesa y guarda una nueva reserva en la base de datos.
-     * (Función corregida y consolidada)
-     */
-    /**
- * Procesa y guarda una nueva reserva en la base de datos.
- */
-// app/Http/Controllers/PageController.php
+// ... (Resto del código)
+
+public function reservaciones()
+{
+    // Carga todos los servicios, asegurando que la relación 'categoria' también se traiga (Eager Loading)
+    $servicios = Servicio::with('categoria')->get(); 
+    
+    // Opcional: Agrupa directamente aquí para simplificar la vista
+    $serviciosAgrupados = $servicios->groupBy('categoria.nombre_categoria'); 
+    
+    // Pasa los servicios ya agrupados a la vista
+    return view('pages.reservaciones', ['serviciosAgrupados' => $serviciosAgrupados]);
+}
 
 // app/Http/Controllers/PageController.php
 
