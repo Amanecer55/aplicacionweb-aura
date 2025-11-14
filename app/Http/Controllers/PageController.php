@@ -59,9 +59,9 @@ public function reservaciones()
     return view('pages.reservaciones', ['serviciosAgrupados' => $serviciosAgrupados]);
 }
 // app/Http/Controllers/PageController.php
-
 public function storeReserva(Request $request)
 {
+
     // 1. Validar los datos del formulario (usa los nombres amigables de Blade)
     $validated = $request->validate([
         'nombre' => 'required|string|max:255', 
@@ -71,13 +71,15 @@ public function storeReserva(Request $request)
         'correo' => 'required|email|max:255',
         'telefono' => 'required|string|max:50',
         
-        'servicios' => 'required|array|min:1', 
+        //'servicios' => 'required|array|min:1', 
+        'servicios' => 'array',
         'servicios.*' => 'string',
         
         'fecha' => 'required|date',
         'hora' => 'required|date_format:H:i',
         'mensajeadd' => 'nullable|string|max:500', 
     ]);
+    
 
     // 2. CONSTRUCCIÓN Y MAPEO de datos a las COLUMNAS EXACTAS de la tabla 'citas'
     $reservaData = [
@@ -102,10 +104,13 @@ public function storeReserva(Request $request)
         'mensajeadd'      => $validated['mensajeadd'],
     ];
 
+    dd($reservaData);
     // 3. Crear y guardar la reserva
     Reserva::create($reservaData); 
 
     // 4. Redirigir a la vista de "gracias" con los datos
     return view('pages.gracias', ['datos' => $reservaData]);
 }
+
 }
+
