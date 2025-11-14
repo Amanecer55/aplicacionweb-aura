@@ -99,7 +99,7 @@ public function storeReserva(Request $request)
         'horadeseada'  => $validated['hora'],  
         
         // Mapeo del Mensaje
-        'mensajeadd'      => $validated['mensajeadd'] ?? null,
+        'mensajeadd'      => $validated['mensajeadd'],
     ];
 
     // 3. Crear y guardar la reserva

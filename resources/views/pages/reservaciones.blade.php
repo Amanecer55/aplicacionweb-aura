@@ -216,10 +216,12 @@
     @csrf
     
     {{-- CAMPOS DE NOMBRE Y APELLIDOS --}}
+    
     <div class="form-grupo">
-        <label for="nombres">Nombre(s):</label>
-        <input type="text" id="nombres" name="nombre" value="{{ old('nombres') }}" required>
-        @error('nombres') <div class="error-message">{{ $message }}</div> @enderror
+         <label for="nombres">Nombre(s):</label>
+         <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" required> 
+
+         @error('nombre') <div class="error-message">{{ $message }}</div> @enderror
     </div>
 
     <div class="form-grupo">
@@ -290,7 +292,7 @@
     {{-- MENSAJE ADICIONAL --}}
     <div class="form-grupo">
         <label for="mensaje">Mensaje Adicional:</label>
-        <textarea id="mensaje" name="mensajeadd" rows="4">{{ old('mensajeadd') }}</textarea>
+        <textarea id="mensajeadd" name="mensajeadd" rows="4">{{ old('mensajeadd') }}</textarea>
         @error('mensajeadd') <div class="error-message">{{ $message }}</div> @enderror
     </div>
     
