@@ -64,7 +64,7 @@ public function storeReserva(Request $request)
 {
     // 1. Validar los datos del formulario (usa los nombres amigables de Blade)
     $validated = $request->validate([
-        'nombres' => 'required|string|max:255', 
+        'nombre' => 'required|string|max:255', 
         'apellido_paterno' => 'required|string|max:255', 
         'apellido_materno' => 'required|string|max:255', 
         

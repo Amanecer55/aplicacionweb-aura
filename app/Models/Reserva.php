@@ -9,22 +9,27 @@ class Reserva extends Model
 {
     use HasFactory;
     
-    // CRÍTICO: Indica a Laravel que use la tabla 'citas'
+    // 1. CRÍTICO: Especifica el nombre real de la tabla en la base de datos.
     protected $table = 'citas'; 
 
-    // Opcional: Si no usas las columnas created_at/updated_at
+    // 2. CRÍTICO: Deshabilita la gestión automática de las columnas created_at/updated_at,
+    // ya que no existen en la tabla 'citas'.
     public $timestamps = false;
     
-    // CRÍTICO: Mapeo de los campos que Laravel PUEDE guardar.
+    // 3. CRÍTICO: Permite la asignación masiva de estos 9 campos.
+    // Los nombres aquí DEBEN coincidir con los nombres de las COLUMNAS de tu tabla 'citas'.
     protected $fillable = [
-        'nombre',
-        'apaterno',     // Coincide con la columna de tu DB
-        'amaterno',     // Coincide con la columna de tu DB
-        'correo', 
-        'telefono', 
-        'fechadeseada', // Coincide con la columna de tu DB
-        'horadeseada',  // Coincide con la columna de tu DB
-        'mensajedd',      // Coincide con la columna de tu DB
-        'servicios',    // ¡NUEVA COLUMNA, ahora lista para ser guardada!
+        'nombre',       // Columna 1
+        'apaterno',     // Columna 2
+        'amaterno',     // Columna 3
+        'correo',       // Columna 4
+        'telefono',     // Columna 5
+        'servicios',    // Columna 6
+        'fechadeseada', // Columna 7
+        'horadeseada',  // Columna 8
+        'mensajeadd',   // Columna 9 (El nombre de tu DB)
     ];
+    
+    // Opcional: Especifica el nombre de la llave primaria si no es 'id'
+    protected $primaryKey = 'idcliente';
 }
