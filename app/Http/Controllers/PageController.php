@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Categoria; // Necesario para la función servicios()
 use App\Models\Reserva;    // Necesario para la función storeReserva()
-use App\Models\Servicio;  // <-- ¡ESTA LÍNEA ES LA SOLUCIÓN!
+use App\Models\Servicio;  // Necesario para la función reservaciones()
 
 class PageController extends Controller
 {
@@ -17,7 +17,6 @@ class PageController extends Controller
 
     /**
      * Muestra la lista de servicios agrupados por categorías.
-     * (Función corregida y consolidada)
      */
     public function servicios()
     {
@@ -27,6 +26,14 @@ class PageController extends Controller
         return view('pages.servicios', [
             'categorias' => $categorias
         ]);
+    }
+
+    /**
+     * Muestra la página del catálogo de productos.
+     */
+    public function catalogo()
+    {
+        return view('pages.catalogo');
     }
 
     /**
@@ -45,72 +52,56 @@ class PageController extends Controller
         return view('pages.contacto');
     }
     
-    // app/Http/Controllers/PageController.php
+    /**
+     * Muestra la página del formulario de reservaciones.
+     */
+    public function reservaciones()
+    {
+        // Cargar todos los servicios Y sus categorías asociadas (Eager Loading)
+        $servicios = Servicio::with('categoria')->get(); 
+        
+        return view('pages.reservaciones', ['servicios' => $servicios]);
+    }
 
-public function reservaciones()
-{
-    // 1. Cargar la relación 'categoria' (Eager Loading)
-    $servicios = Servicio::with('categoria')->get();
+    /**
+     * Procesa y guarda una nueva reserva en la base de datos.
+     */
+    public function storeReserva(Request $request)
+    {
+        // 1. Validar los datos del formulario (usa los nombres amigables de Blade)
+        $validated = $request->validate([
+            'nombres' => 'required|string|max:255', 
+            'apellido_paterno' => 'required|string|max:255', 
+            'apellido_materno' => 'required|string|max:255', 
+            
+            'correo' => 'required|email|max:255',
+            'telefono' => 'required|string|max:50',
+            
+            'servicios' => 'required|array|min:1', 
+            'servicios.*' => 'string',
+            
+            'fecha' => 'required|date',
+            'hora' => 'required|date_format:H:i',
+            'mensaje' => 'nullable|string|max:500', 
+        ]);
 
-    // 2. Agrupar la colección de servicios por el nombre de la categoría
-    $serviciosAgrupados = $servicios->groupBy('categoria.nombre_categoria'); 
+        // 2. CONSTRUCCIÓN Y MAPEO de datos a las COLUMNAS EXACTAS de la tabla 'citas'
+        $reservaData = [
+            'nombre'       => $validated['nombres'], 
+            'apaterno'     => $validated['apellido_paterno'], 
+            'amaterno'     => $validated['apellido_materno'], 
+            'correo'       => $validated['correo'],
+            'telefono'     => $validated['telefono'],
+            'servicios'    => implode(', ', $validated['servicios']), // Combina el array a string
+            'fechadeseada' => $validated['fecha'], 
+            'horadeseada'  => $validated['hora'],  
+            'mensaje'      => $validated['mensaje'] ?? null,
+        ];
 
-    // 3. Pasar la colección YA AGRUPADA a la vista con el nombre correcto
-    return view('pages.reservaciones', ['serviciosAgrupados' => $serviciosAgrupados]);
+        // 3. Crear y guardar la reserva
+        Reserva::create($reservaData); 
+
+        // 4. Redirigir a la vista de "gracias" con los datos
+        return view('pages.gracias', ['datos' => $reservaData]);
+    }
 }
-// app/Http/Controllers/PageController.php
-public function storeReserva(Request $request)
-{
-
-    // 1. Validar los datos del formulario (usa los nombres amigables de Blade)
-    $validated = $request->validate([
-        'nombre' => 'required|string|max:255', 
-        'apellido_paterno' => 'required|string|max:255', 
-        'apellido_materno' => 'required|string|max:255', 
-        
-        'correo' => 'required|email|max:255',
-        'telefono' => 'required|string|max:50',
-        
-        //'servicios' => 'required|array|min:1', 
-        'servicios' => 'array',
-        'servicios.*' => 'string',
-        
-        'fecha' => 'required|date',
-        'hora' => 'required|date_format:H:i',
-        'mensajeadd' => 'nullable|string|max:500', 
-    ]);
-    
-
-    // 2. CONSTRUCCIÓN Y MAPEO de datos a las COLUMNAS EXACTAS de la tabla 'citas'
-    $reservaData = [
-        // Mapeo de Nombres (Columna: nombre)
-        'nombre'       => $validated['nombre'], 
-        // Mapeo de Apellidos (Columnas: apaterno, amaterno)
-        'apaterno'     => $validated['apellido_paterno'], 
-        'amaterno'     => $validated['apellido_materno'], 
-        
-        // Mapeo de Contacto
-        'correo'       => $validated['correo'],
-        'telefono'     => $validated['telefono'],
-        
-        // Mapeo de Servicios (Columna: servicios)
-        'servicios'    => implode(', ', $validated['servicios']), // Combina el array a string
-        
-        // Mapeo de Fecha y Hora (Columnas: fechadeseada, horadeseada)
-        'fechadeseada' => $validated['fecha'], 
-        'horadeseada'  => $validated['hora'],  
-        
-        // Mapeo del Mensaje
-        'mensajeadd'      => $validated['mensajeadd'],
-    ];
-
-    dd($reservaData);
-    // 3. Crear y guardar la reserva
-    Reserva::create($reservaData); 
-
-    // 4. Redirigir a la vista de "gracias" con los datos
-    return view('pages.gracias', ['datos' => $reservaData]);
-}
-
-}
-
